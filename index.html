@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+	<title>Трансформатор кода</title>
+	<style>
+	  body {
+	    padding: 20px;
+	  }
+	  .text-code {
+	    display: block;
+	    width: 90%;
+		height: 500px;
+		margin-top: 20px;
+	  }
+	  .btn-convert {
+	    margin-right: 20px;
+		background-color: green;
+		color: white;
+	  }
+	  .btn-reset {
+		color: white;
+		background-color: red;
+	  }
+	</style>
+  </head>
+  <body>
+    <button class="btn-convert" type="button">Трансформировать</button>
+	<button class="btn-reset">Очистить</button>
+    <textarea class="text-code" id="test" placeholder="Вставьте код"></textarea>
+	
+	<script>
+	  let textCode = document.querySelector(".text-code");
+	  let btnConvert = document.querySelector(".btn-convert");
+	  let btnReset = document.querySelector(".btn-reset");
+	  
+	  btnConvert.onclick = function() {
+	    let str = textCode.value;
+		let isCss = false;
+		
+		if (str.indexOf("<") > -1) {
+		  isCss = false;
+		} else {
+		  isCss = true;
+		}
+		
+		let re1 = /</gi;
+		let re2 = />/gi;
+
+		str = str.replace(re1, "&lt;");
+	    str = str.replace(re2, "&gt;");
+		
+	    let lines = str.split("\n");
+		
+		for (let i = 0; i < lines.length; i++) {
+		  lines[i] = "<span></span>" + lines[i];
+		}
+		
+		lines[0] = "<pre><code>" + lines[0];
+		lines[lines.length - 1] = lines[lines.length - 1] + "</code></pre>";
+		
+		str = lines.join("\n");		
+		
+		
+		if (isCss) {
+		  textCode.value = `  <div class="demo-step-css hidden">\n${str}\n  </div>`;
+		  
+		  return;
+		}
+		
+		textCode.value = `  <div class="demo-step-html hidden">\n${str}\n  </div>`;
+	  }
+	  
+	  btnReset.onclick = function() {
+	    textCode.value = "";
+	  }
+	</script>
+  </body>
+</html>
